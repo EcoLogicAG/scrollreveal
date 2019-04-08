@@ -10,7 +10,7 @@
 	a commercial license from https://scrollrevealjs.org/
 */
 import $ from 'tealight';
-import { parse, multiply, rotateX, rotateY, rotateZ, scale, translateX, translateY } from 'rematrix';
+import { translateY, translateX, rotateX, rotateY, rotateZ, scale, parse, multiply } from 'rematrix';
 import raf from 'miniraf';
 
 var defaults = {
@@ -44,7 +44,7 @@ var defaults = {
 	afterReveal: function afterReveal() {},
 	beforeReset: function beforeReset() {},
 	beforeReveal: function beforeReveal() {}
-}
+};
 
 function failure() {
 	document.documentElement.classList.remove('sr');
@@ -72,7 +72,7 @@ function success() {
 	}
 }
 
-var mount = { success: success, failure: failure }
+var mount = { success: success, failure: failure };
 
 function isObject(x) {
 	return (
@@ -773,12 +773,12 @@ function reveal(target, options, syncing) {
 	if ( syncing === void 0 ) syncing = false;
 
 	var containerBuffer = [];
-	var sequence$$1;
+	var sequence;
 	var interval = options.interval || defaults.interval;
 
 	try {
 		if (interval) {
-			sequence$$1 = new Sequence(interval);
+			sequence = new Sequence(interval);
 		}
 
 		var nodes = $(target);
@@ -841,12 +841,12 @@ function reveal(target, options, syncing) {
 			element.containerId = containerId;
 			element.styles = style(element);
 
-			if (sequence$$1) {
+			if (sequence) {
 				element.sequence = {
-					id: sequence$$1.id,
-					index: sequence$$1.members.length
+					id: sequence.id,
+					index: sequence.members.length
 				};
-				sequence$$1.members.push(element.id);
+				sequence.members.push(element.id);
 			}
 
 			elementBuffer.push(element);
@@ -876,8 +876,8 @@ function reveal(target, options, syncing) {
 			node: container.node
 		};
 	});
-	if (sequence$$1) {
-		this.store.sequences[sequence$$1.id] = sequence$$1;
+	if (sequence) {
+		this.store.sequences[sequence.id] = sequence;
 	}
 
 	/**
@@ -928,7 +928,7 @@ function sync() {
 }
 
 var polyfill = function (x) { return (x > 0) - (x < 0) || +x; };
-var mathSign = Math.sign || polyfill
+var mathSign = Math.sign || polyfill;
 
 function getGeometry(target, isContainer) {
 	/**
@@ -977,8 +977,9 @@ function getScrolled(container) {
 }
 
 function isElementVisible(element) {
-	if ( element === void 0 ) element = {};
+    if ( element === void 0 ) element = {};
 
+    if (!element.geometry) { element = {}; }
 	var container = this.store.containers[element.containerId];
 	if (!container) { return }
 

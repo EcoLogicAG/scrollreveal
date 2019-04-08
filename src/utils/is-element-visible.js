@@ -1,4 +1,5 @@
 export default function isElementVisible(element = {}) {
+    if (!element.geometry) element = {}
 	const container = this.store.containers[element.containerId]
 	if (!container) return
 
